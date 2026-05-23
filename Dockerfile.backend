@@ -1,0 +1,24 @@
+FROM python:3.12-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV PIP_NO_CACHE_DIR=1
+
+WORKDIR /app
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY pyproject.toml README.md langgraph.json ./
+COPY src ./src
+
+RUN touch .env
+
+RUN pip install -U pip \
+    && pip install -e . \
+    && pip install -U "langgraph-cli[inmem]"
+
+EXPOSE 8001
+
+CMD ["python", "-m", "langgraph_cli", "dev", "--host", "0.0.0.0", "--port", "8001", "--config", "langgraph.json", "--no-browser", "--no-reload", "--allow-blocking"]

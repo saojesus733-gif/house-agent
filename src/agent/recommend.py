@@ -1,0 +1,62 @@
+from typing import Literal
+
+from langgraph.constants import END, START
+from langgraph.graph import StateGraph
+
+from src.agent.common.context import ContextSchema
+from src.agent.node.recommend import (
+    call_get_schema,
+    check_query,
+    collect_user_info,
+    generate_query,
+    get_schema_node,
+    list_tables,
+    run_query_node,
+)
+from src.agent.state.recommend import RecommendState
+
+builder = StateGraph(RecommendState, context_schema=ContextSchema)
+builder.add_node("collect_user_info", collect_user_info)
+builder.add_node(list_tables)
+builder.add_node(call_get_schema)
+builder.add_node("get_schema", get_schema_node)
+builder.add_node(generate_query)
+builder.add_node(check_query)
+builder.add_node("run_query", run_query_node)
+
+builder.add_edge(START, "collect_user_info")
+
+
+def route_after_collect(state: RecommendState) -> Literal["list_tables", "__end__"]:
+    payload = state["messages"][-1].additional_kwargs.get("recommend_input_request", {})
+    if str(payload.get("field") or "").strip():
+        return END
+    return "list_tables"
+
+
+builder.add_conditional_edges(
+    "collect_user_info",
+    route_after_collect,
+    ["list_tables", END],
+)
+builder.add_edge("list_tables", "call_get_schema")
+builder.add_edge("call_get_schema", "get_schema")
+builder.add_edge("get_schema", "generate_query")
+
+
+def should_continue(state: RecommendState):
+    last_msg = state["messages"][-1]
+    if not last_msg.tool_calls:
+        return END
+    return "check_query"
+
+
+builder.add_conditional_edges(
+    "generate_query",
+    should_continue,
+    [END, "check_query"],
+)
+builder.add_edge("check_query", "run_query")
+builder.add_edge("run_query", "generate_query")
+
+recommend_graph = builder.compile()

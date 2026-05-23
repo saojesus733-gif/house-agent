@@ -1,0 +1,1706 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能租房助手</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 寮曞叆 marked 搴撶敤浜庤В鏋?Markdown -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 0 30px;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .search-box {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px 18px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #2575fc;
+        }
+
+        .search-btn {
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(37, 117, 252, 0.3);
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+            text-align: center;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: #2575fc;
+            margin-bottom: 15px;
+        }
+
+        .feature-title {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .feature-desc {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .house-list {
+            margin-bottom: 50px;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            color: #333;
+            text-align: center;
+        }
+
+        .houses {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .house-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+        }
+
+        .house-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .house-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .house-info {
+            padding: 20px;
+        }
+
+        .house-title {
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .house-location {
+            color: #666;
+            font-size: 0.95rem;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+
+        .house-location i {
+            margin-right: 5px;
+            color: #2575fc;
+        }
+
+        .house-price {
+            color: #ff6b6b;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .house-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag {
+            background: #e9ecef;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: #555;
+        }
+
+        .chat-icon {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(37, 117, 252, 0.4);
+            z-index: 1000;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .chat-icon:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(37, 117, 252, 0.5);
+        }
+
+        .chat-container {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 760px;
+            height: 600px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            z-index: 1001;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-body {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            background-color: #f9f9f9;
+        }
+
+        .conversation-sidebar {
+            width: 220px;
+            border-right: 1px solid #e9ecef;
+            background: #fbfbff;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .new-conversation-btn {
+            margin: 14px;
+            padding: 11px 14px;
+            border: 1px solid #d8ccff;
+            border-radius: 12px;
+            background: #f0eaff;
+            color: #5b2be0;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .new-conversation-btn:hover {
+            background: #e6dcff;
+            transform: translateY(-1px);
+        }
+
+        .conversation-list {
+            flex: 1;
+            min-height: 0;
+            overflow-y: auto;
+            padding: 0 10px 12px;
+        }
+
+        .conversation-item {
+            width: 100%;
+            border: none;
+            border-radius: 10px;
+            background: transparent;
+            padding: 10px 8px 10px 12px;
+            margin-bottom: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            color: #4b5563;
+            text-align: left;
+        }
+
+        .conversation-item.active {
+            background: #ede7ff;
+            color: #4f22c8;
+        }
+
+        .conversation-title {
+            flex: 1;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            font-size: 0.92rem;
+        }
+
+        .delete-conversation {
+            border: none;
+            background: transparent;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 6px;
+            opacity: 0;
+        }
+
+        .conversation-item:hover .delete-conversation,
+        .conversation-item.active .delete-conversation {
+            opacity: 1;
+        }
+
+        .delete-conversation:hover {
+            background: rgba(79, 34, 200, 0.1);
+            color: #ef4444;
+        }
+
+        .chat-main {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            padding: 20px 25px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.1rem;
+        }
+
+        .close-chat {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 25px;
+            overflow-y: auto;
+            background-color: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message {
+            margin-bottom: 18px;
+            max-width: 85%;
+            clear: both;
+            word-wrap: break-word;
+        }
+
+        .user-message {
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            padding: 12px 18px;
+            border-radius: 18px 18px 0 18px;
+            align-self: flex-end;
+        }
+
+        .ai-message {
+            background: white;
+            color: #333;
+            padding: 12px 18px;
+            border-radius: 18px 18px 18px 0;
+            border: 1px solid #e9ecef;
+            align-self: flex-start;
+        }
+
+        .process-message {
+            background: #f5f5f5;
+            color: #666;
+            padding: 12px 18px;
+            border-radius: 18px 18px 18px 0;
+            border: 1px solid #e0e0e0;
+            align-self: flex-start;
+            margin-bottom: 18px;
+            font-size: 0.9rem;
+            max-width: 85%;
+        }
+
+        .think-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 8px;
+        }
+
+        .think-title {
+            font-weight: 600;
+            color: #555;
+        }
+
+        .think-toggle {
+            background: none;
+            border: none;
+            color: #777;
+            cursor: pointer;
+            font-size: 0.8rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .think-toggle:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .think-content {
+            white-space: pre-line;
+            overflow: visible; /* 鏀逛负 visible 鑰屼笉鏄?auto */
+            transition: max-height 0.3s ease-out;
+            max-height: none; /* 绉婚櫎鍥哄畾楂樺害闄愬埗 */
+        }
+
+        .think-content.collapsed {
+            max-height: 0;
+            overflow: hidden;
+        }
+
+        .chat-input-area {
+            border-top: 1px solid #e9ecef;
+            padding: 18px;
+            display: flex;
+            gap: 12px;
+            background: white;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 14px 18px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: #2575fc;
+        }
+
+        .send-btn {
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 0 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.3s;
+            font-size: 1rem;
+        }
+
+        .send-btn:hover {
+            opacity: 0.9;
+        }
+
+        /* Markdown 鏍峰紡鏀寔 */
+        .ai-message h1,
+        .ai-message h2,
+        .ai-message h3 {
+            margin-top: 0.5em;
+            margin-bottom: 0.3em;
+            font-weight: 600;
+        }
+
+        .ai-message p {
+            margin-bottom: 0.8em;
+        }
+
+        .ai-message ul,
+        .ai-message ol {
+            padding-left: 20px;
+            margin-bottom: 0.8em;
+        }
+
+        .ai-message li {
+            margin-bottom: 0.3em;
+        }
+
+        .ai-message strong {
+            font-weight: 600;
+        }
+
+        .ai-message em {
+            font-style: italic;
+        }
+
+        .ai-message code {
+            background-color: #f5f5f5;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        .ai-message pre {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin-bottom: 0.8em;
+        }
+
+        .ai-message pre code {
+            background-color: transparent;
+            padding: 0;
+        }
+
+        .ai-message blockquote {
+            border-left: 4px solid #2575fc;
+            padding-left: 12px;
+            color: #666;
+            margin-left: 0;
+            margin-bottom: 0.8em;
+        }
+
+        .typing-dots {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #999;
+            margin: 0 2px;
+            animation: typing 1.4s infinite both;
+        }
+
+        .typing-dots:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dots:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-5px);
+            }
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: #666;
+            font-size: 0.9rem;
+            border-top: 1px solid #e9ecef;
+            margin-top: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .chat-container {
+                width: 92%;
+                right: 4%;
+                height: 75vh;
+                bottom: 80px;
+            }
+
+            .conversation-sidebar {
+                width: 150px;
+            }
+
+            .chat-icon {
+                bottom: 20px;
+                right: 20px;
+                width: 65px;
+                height: 65px;
+                font-size: 26px;
+            }
+
+            .houses {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .chat-container {
+                width: 760px;
+                height: 650px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>智能租房助手</h1>
+            <p class="subtitle">AI 智能推荐，快速找到心仪房源。只需描述您的需求，智能助手将为您匹配最合适的租房选项。</p>
+        </header>
+
+        <div class="search-box">
+            <input type="text" class="search-input" placeholder="输入城市、区域或小区名称">
+            <input type="text" class="search-input" placeholder="租金预算（元/月）">
+            <input type="text" class="search-input" placeholder="户型需求（如：1室1厅）">
+            <button class="search-btn">搜索房源</button>
+        </div>
+
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <h3 class="feature-title">AI 智能推荐</h3>
+                <p class="feature-desc">基于您的需求，智能匹配最合适的房源，节省筛选时间。</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-database"></i>
+                </div>
+                <h3 class="feature-title">海量真实房源</h3>
+                <p class="feature-desc">覆盖全国主要城市，实时更新，确保信息准确可靠。</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <h3 class="feature-title">智能对话咨询</h3>
+                <p class="feature-desc">通过自然对话理解您的需求，提供个性化租房建议。</p>
+            </div>
+        </div>
+
+        <div class="house-list">
+            <h2 class="section-title">推荐房源</h2>
+            <div class="houses">
+                <div class="house-card">
+                    <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="公寓图片" class="house-img">
+                    <div class="house-info">
+                        <h3 class="house-title">整租·阳光公寓 1室1厅1卫</h3>
+                        <div class="house-location">
+                            <i class="fas fa-map-marker-alt"></i> 北京海淀·中关村
+                        </div>
+                        <div class="house-price">¥4500/月</div>
+                        <div class="house-tags">
+                            <span class="tag">近地铁</span>
+                            <span class="tag">精装修</span>
+                            <span class="tag">拎包入住</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="house-card">
+                    <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="公寓图片" class="house-img">
+                    <div class="house-info">
+                        <h3 class="house-title">合租·青年社区 主卧独卫</h3>
+                        <div class="house-location">
+                            <i class="fas fa-map-marker-alt"></i> 上海浦东·陆家嘴
+                        </div>
+                        <div class="house-price">¥3200/月</div>
+                        <div class="house-tags">
+                            <span class="tag">室友友好</span>
+                            <span class="tag">智能门锁</span>
+                            <span class="tag">公共区域</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="house-card">
+                    <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="公寓图片" class="house-img">
+                    <div class="house-info">
+                        <h3 class="house-title">整租·温馨家园 2室1厅1卫</h3>
+                        <div class="house-location">
+                            <i class="fas fa-map-marker-alt"></i> 广州天河·珠江新城
+                        </div>
+                        <div class="house-price">¥5800/月</div>
+                        <div class="house-tags">
+                            <span class="tag">南北通透</span>
+                            <span class="tag">家电齐全</span>
+                            <span class="tag">小区安静</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 智能租房助手 | 提供 AI 驱动的智能租房推荐服务</p>
+        </footer>
+    </div>
+
+    <!-- 鑱婂ぉ鍥炬爣 -->
+    <div class="chat-icon" id="chatIcon">
+        <i class="fas fa-comment-dots"></i>
+    </div>
+
+    <!-- 鑱婂ぉ瀹瑰櫒 -->
+    <div class="chat-container" id="chatContainer">
+        <div class="chat-header">
+            <span>租房智能助手</span>
+            <button class="close-chat" id="closeChat">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="chat-body">
+            <aside class="conversation-sidebar" id="conversationSidebar">
+                <button class="new-conversation-btn" id="newConversationBtn">
+                    <i class="fas fa-plus"></i> 新对话
+                </button>
+                <div class="conversation-list" id="conversationList"></div>
+            </aside>
+            <div class="chat-main">
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message ai-message">
+                        您好！我是租房智能助手，可以帮助您寻找合适的房源。请告诉我您的需求，例如：城市、预算等。
+                    </div>
+                </div>
+                <div class="chat-input-area">
+                    <input type="text" class="chat-input" id="chatInput" placeholder="输入您的租房需求...">
+                    <button class="send-btn" id="sendBtn">发送</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 鍏ㄥ眬鍙橀噺
+        let currentThreadId = null;
+        let isChatOpen = false;
+        let activeInterruptId = '';
+        let createThreadPromise = null;
+        let isSendingMessage = false;
+        let currentConversationId = null;
+        let conversations = [];
+        const STORAGE_KEY = 'HOUSE_AGENT_CONVERSATIONS';
+        const ACTIVE_CONVERSATION_KEY = 'HOUSE_AGENT_ACTIVE_CONVERSATION';
+        const API_BASE_URL = window.HOUSE_AGENT_API_BASE_URL
+            || (['localhost', '127.0.0.1'].includes(window.location.hostname)
+                ? 'http://127.0.0.1:8001'
+                : `http://${window.location.hostname}:8001`);
+
+        // 閰嶇疆 marked
+        marked.setOptions({
+            breaks: true, // 鎹㈣绗﹁浆鎹负 <br>
+            gfm: true, // 鍚敤 GitHub Flavored Markdown
+        });
+
+        // DOM鍏冪礌
+        const chatIcon = document.getElementById('chatIcon');
+        const chatContainer = document.getElementById('chatContainer');
+        const closeChat = document.getElementById('closeChat');
+        const chatMessages = document.getElementById('chatMessages');
+        const chatInput = document.getElementById('chatInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const conversationList = document.getElementById('conversationList');
+        const newConversationBtn = document.getElementById('newConversationBtn');
+        const initialChatHtml = chatMessages.innerHTML;
+
+        function generateId(prefix) {
+            return `${prefix}_${Date.now()}_${Math.random().toString(16).slice(2)}`;
+        }
+
+        function createEmptyConversation() {
+            return {
+                id: generateId('conversation'),
+                title: '新对话',
+                threadId: null,
+                demoUserId: generateId('demo_user'),
+                messagesHtml: initialChatHtml,
+                createdAt: Date.now(),
+                updatedAt: Date.now()
+            };
+        }
+
+        function loadConversations() {
+            try {
+                conversations = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+            } catch (error) {
+                conversations = [];
+            }
+
+            if (!Array.isArray(conversations)) {
+                conversations = [];
+            }
+        }
+
+        function saveConversations() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(conversations));
+            if (currentConversationId) {
+                localStorage.setItem(ACTIVE_CONVERSATION_KEY, currentConversationId);
+            }
+        }
+
+        function getCurrentConversation() {
+            return conversations.find(item => item.id === currentConversationId) || null;
+        }
+
+        function getCurrentUserId() {
+            const conversation = getCurrentConversation();
+            if (!conversation) {
+                return generateId('demo_user');
+            }
+            if (!conversation.demoUserId) {
+                conversation.demoUserId = generateId('demo_user');
+                saveConversations();
+            }
+            return conversation.demoUserId;
+        }
+
+        function renderConversationList() {
+            conversationList.innerHTML = '';
+            for (const conversation of conversations) {
+                const item = document.createElement('button');
+                item.className = `conversation-item${conversation.id === currentConversationId ? ' active' : ''}`;
+                item.type = 'button';
+                item.dataset.id = conversation.id;
+
+                const title = document.createElement('span');
+                title.className = 'conversation-title';
+                title.textContent = conversation.title || '新对话';
+
+                const del = document.createElement('button');
+                del.className = 'delete-conversation';
+                del.type = 'button';
+                del.title = '鍒犻櫎瀵硅瘽';
+                del.innerHTML = '<i class="fas fa-trash"></i>';
+                del.addEventListener('click', (event) => deleteConversation(conversation.id, event));
+
+                item.appendChild(title);
+                item.appendChild(del);
+                item.addEventListener('click', () => selectConversation(conversation.id));
+                conversationList.appendChild(item);
+            }
+        }
+
+        function persistCurrentConversation(titleCandidate = '') {
+            const conversation = getCurrentConversation();
+            if (!conversation) return;
+
+            conversation.threadId = currentThreadId;
+            conversation.messagesHtml = chatMessages.innerHTML;
+            conversation.updatedAt = Date.now();
+
+            if (titleCandidate && (!conversation.title || conversation.title === '新对话')) {
+                conversation.title = titleCandidate.length > 18
+                    ? `${titleCandidate.slice(0, 18)}...`
+                    : titleCandidate;
+            }
+
+            conversations.sort((a, b) => b.updatedAt - a.updatedAt);
+            saveConversations();
+            renderConversationList();
+        }
+
+        function selectConversation(id) {
+            const conversation = conversations.find(item => item.id === id);
+            if (!conversation || isSendingMessage) return;
+
+            currentConversationId = conversation.id;
+            currentThreadId = conversation.threadId || null;
+            activeInterruptId = '';
+            createThreadPromise = null;
+            chatMessages.innerHTML = conversation.messagesHtml || initialChatHtml;
+
+            const pendingInterruptElement = chatMessages.querySelector('#__interrupt__');
+            activeInterruptId = pendingInterruptElement ? pendingInterruptElement.id : '';
+
+            saveConversations();
+            renderConversationList();
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function createNewConversation() {
+            if (isSendingMessage) return;
+
+            const conversation = createEmptyConversation();
+            conversations.unshift(conversation);
+            currentConversationId = conversation.id;
+            currentThreadId = null;
+            activeInterruptId = '';
+            createThreadPromise = null;
+            chatMessages.innerHTML = initialChatHtml;
+            saveConversations();
+            renderConversationList();
+            createThread();
+        }
+
+        function deleteConversation(id, event) {
+            event.stopPropagation();
+            if (isSendingMessage) return;
+
+            conversations = conversations.filter(item => item.id !== id);
+            if (currentConversationId === id) {
+                if (conversations.length === 0) {
+                    const conversation = createEmptyConversation();
+                    conversations.unshift(conversation);
+                }
+                currentConversationId = conversations[0].id;
+                currentThreadId = conversations[0].threadId || null;
+                chatMessages.innerHTML = conversations[0].messagesHtml || initialChatHtml;
+            }
+            saveConversations();
+            renderConversationList();
+        }
+
+        function initializeConversationStore() {
+            loadConversations();
+            if (conversations.length === 0) {
+                conversations.unshift(createEmptyConversation());
+            }
+
+            const activeId = localStorage.getItem(ACTIVE_CONVERSATION_KEY);
+            const activeConversation = conversations.find(item => item.id === activeId) || conversations[0];
+            currentConversationId = activeConversation.id;
+            currentThreadId = activeConversation.threadId || null;
+            chatMessages.innerHTML = activeConversation.messagesHtml || initialChatHtml;
+            saveConversations();
+            renderConversationList();
+        }
+
+        // 鎵撳紑鑱婂ぉ绐楀彛
+        chatIcon.addEventListener('click', async () => {
+            if (!isChatOpen) {
+                chatContainer.style.display = 'flex';
+                isChatOpen = true;
+
+                // 濡傛灉娌℃湁浼氳瘽锛屽垯鍒涘缓涓€涓?
+                if (!currentThreadId) {
+                    await createThread();
+                }
+
+                // 婊氬姩鍒板簳閮?
+                setTimeout(() => {
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }, 100);
+            }
+        });
+
+        // 鍏抽棴鑱婂ぉ绐楀彛
+        closeChat.addEventListener('click', () => {
+            chatContainer.style.display = 'none';
+            isChatOpen = false;
+        });
+
+        // Send message
+        sendBtn.addEventListener('click', sendMessage);
+        newConversationBtn.addEventListener('click', createNewConversation);
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // 鍒涘缓浼氳瘽
+        async function createThread() {
+            if (currentThreadId) {
+                return currentThreadId;
+            }
+            if (createThreadPromise) {
+                return createThreadPromise;
+            }
+
+            createThreadPromise = (async () => {
+            try {
+                const response = await fetch(`${API_BASE_URL}/threads`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({})
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                currentThreadId = data.thread_id;
+                const conversation = getCurrentConversation();
+                if (conversation) {
+                    conversation.threadId = currentThreadId;
+                    saveConversations();
+                    renderConversationList();
+                }
+                console.log('浼氳瘽鍒涘缓鎴愬姛:', currentThreadId);
+                return currentThreadId;
+
+            } catch (error) {
+                console.error('鍒涘缓浼氳瘽澶辫触:', error);
+                throw error;
+            } finally {
+                createThreadPromise = null;
+            }
+            })();
+
+            return createThreadPromise;
+        }
+
+        /*
+        // Legacy streaming renderer kept only for reference. The active sendMessage
+        // implementation is defined below createAssistantTurn().
+        // 鍙戦€佹秷鎭嚱鏁?
+        async function sendMessage() {
+            const message = chatInput.value.trim();
+            if (!message || !currentThreadId) return;
+
+            // 娓呯┖杈撳叆妗?
+            chatInput.value = '';
+
+            // 鏄剧ず鐢ㄦ埛娑堟伅
+            const userMessageElement = document.createElement('div');
+            userMessageElement.className = 'message user-message';
+            userMessageElement.textContent = message;
+            chatMessages.appendChild(userMessageElement);
+
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            try {
+                // 鍒ゆ柇鏄惁闇€瑕佷腑鏂仮澶?
+                const pendingInterruptElement = chatMessages.querySelector('#__interrupt__');
+                const isInterrupt = Boolean(pendingInterruptElement);
+                let requestBody;
+                if (isInterrupt) {
+                    pendingInterruptElement.removeAttribute('id');
+                    // 涓柇鎭㈠妯″紡
+                    requestBody = {
+                        assistant_id: "house_agent",
+                        command: {
+                            resume: message
+                        },
+                        context: {
+                            user_id: getCurrentUserId()
+                        },
+                        stream_mode: ["updates", "messages"],
+                        stream_subgraphs: true
+                    };
+                } else {
+                    // 姝ｅ父妯″紡
+                    requestBody = {
+                        assistant_id: "house_agent",
+                        input: {
+                            messages: [{"role": "human", "content": message}]
+                        },
+                        context: {
+                            user_id: getCurrentUserId()
+                        },
+                        stream_mode: ["updates", "messages"],
+                        stream_subgraphs: true
+                    };
+                }
+                // 鍙戦€佽姹傚埌鏅鸿兘浣?
+                const response = await fetch(`${API_BASE_URL}/threads/${currentThreadId}/runs/stream`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                // 鍒涘缓鎬濊€冭繃绋嬪厓绱?
+                thinkElement = document.createElement('div');
+                thinkElement.style.display = 'none';
+                thinkElement.className = 'process-message';
+
+                // 娣诲姞鏍囬鍜屽垏鎹㈡寜閽?
+                const thinkHeader = document.createElement('div');
+                thinkHeader.className = 'think-header';
+
+                const thinkTitle = document.createElement('div');
+                thinkTitle.className = 'think-title';
+                thinkTitle.textContent = '鎬濊€冭繃绋?;
+
+                const thinkToggle = document.createElement('button');
+                thinkToggle.className = 'think-toggle';
+                thinkToggle.innerHTML = '<i class="fas fa-chevron-down"></i>';
+                thinkToggle.setAttribute('title', '鐐瑰嚮灞曞紑/鏀剁缉');
+
+                thinkHeader.appendChild(thinkTitle);
+                thinkHeader.appendChild(thinkToggle);
+
+                // 娣诲姞鎬濊€冨唴瀹瑰尯鍩?
+                const thinkContent = document.createElement('div');
+                thinkContent.className = 'think-content';
+
+                // 缁勮鎬濊€冨厓绱?                thinkElement.appendChild(thinkHeader);
+                thinkElement.appendChild(thinkContent);
+
+                // 娣诲姞鍒囨崲鍔熻兘
+                thinkHeader.addEventListener('click', function() {
+                    thinkContent.classList.toggle('collapsed');
+                    const icon = thinkToggle.querySelector('i');
+                    if (thinkContent.classList.contains('collapsed')) {
+                        icon.className = 'fas fa-chevron-right';
+                    } else {
+                        icon.className = 'fas fa-chevron-down';
+                    }
+                });
+
+                // 璇诲彇娴佸紡鍝嶅簲
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let thinkContentText = '';
+                let aiMessageContent = '';
+                let startAI = false;
+                let interruptId = '';
+
+                function findInterruptPayload(payload) {
+                    if (!payload || typeof payload !== 'object') {
+                        return null;
+                    }
+                    if (Array.isArray(payload.__interrupt__) && payload.__interrupt__.length > 0) {
+                        return payload.__interrupt__[0];
+                    }
+                    for (const value of Object.values(payload)) {
+                        if (!value || typeof value !== 'object') {
+                            continue;
+                        }
+                        if (Array.isArray(value.__interrupt__) && value.__interrupt__.length > 0) {
+                            return value.__interrupt__[0];
+                        }
+                    }
+                    return null;
+                }
+
+                function getInterruptText(interruptPayload) {
+                    if (!interruptPayload) {
+                        return '';
+                    }
+                    const value = interruptPayload.value;
+                    if (typeof value === 'string') {
+                        return value;
+                    }
+                    if (value && typeof value === 'object') {
+                        if (typeof value.question === 'string') {
+                            return value.question;
+                        }
+                        if (typeof value.prompt === 'string') {
+                            return value.prompt;
+                        }
+                        if (typeof value.message === 'string') {
+                            return value.message;
+                        }
+                        if (typeof value.text === 'string') {
+                            return value.text;
+                        }
+                        try {
+                            return JSON.stringify(value, null, 2);
+                        } catch (error) {
+                            return String(value);
+                        }
+                    }
+                    return String(value || '');
+                }
+
+                function appendAfter(referenceNode, node) {
+                    if (!referenceNode || !referenceNode.parentNode) {
+                        chatMessages.appendChild(node);
+                        return;
+                    }
+                    if (referenceNode.nextSibling) {
+                        referenceNode.parentNode.insertBefore(node, referenceNode.nextSibling);
+                    } else {
+                        referenceNode.parentNode.appendChild(node);
+                    }
+                }
+
+                function appendBefore(referenceNode, node) {
+                    if (!referenceNode || !referenceNode.parentNode) {
+                        chatMessages.appendChild(node);
+                        return;
+                    }
+                    referenceNode.parentNode.insertBefore(node, referenceNode);
+                }
+
+                function ensureThinkElementAttached() {
+                    if (!thinkElement) {
+                        return;
+                    }
+                    if (!thinkElement.parentNode) {
+                        if (aiMessageElement && aiMessageElement.parentNode) {
+                            appendBefore(aiMessageElement, thinkElement);
+                        } else {
+                            chatMessages.appendChild(thinkElement);
+                        }
+                        return;
+                    }
+                    if (aiMessageElement && aiMessageElement.parentNode && thinkElement.nextSibling !== aiMessageElement) {
+                        appendBefore(aiMessageElement, thinkElement);
+                    }
+                }
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+
+                    const chunk = decoder.decode(value);
+                    const lines = chunk.split('\n');
+                    let currentType = '';
+                    
+
+                    for (const line of lines) {
+                        if (line.startsWith('event: ')) {
+                            currentType = line.substring(7);
+                        }
+                        else if (line.startsWith('data: ')) {
+                            const dataStr = line.substring(6);
+                            if (dataStr.trim() === '') continue;
+                            try {
+                                const data = JSON.parse(dataStr);
+
+                                // 澶勭悊 updates 浜嬩欢
+                                if (currentType.startsWith('updates')) {
+                                    if (Object.values(data).some(v => v && typeof v === 'object' && 'messages' in v)) {
+                                        // 鍘婚噸锛氬瓙鍥炬洿鏂扮殑state, 涓诲浘涔熶細鍐嶆洿鏂颁竴娆°€傚彧杈撳嚭瀛愬浘鍐呭
+                                        if (currentType === 'updates\r') {
+                                            continue;
+                                        }
+
+                                        // 鎻愬彇鎵€鏈夋秷鎭?
+                                        const messages = Object.values(data).flatMap(v => v.messages || []);
+                                        for (const msg of messages) {
+                                            if (!msg) continue;
+
+                                            // 宸ュ叿璋冪敤
+                                            if (msg.type === 'ai' && msg.tool_calls && msg.tool_calls.length > 0) {
+                                                if (thinkElement.style.display === 'none') {
+                                                    thinkElement.style.display = 'block';
+                                                }
+                                                ensureThinkElementAttached();
+                                                thinkContentText += '杩涜宸ュ叿璋冪敤锛?;
+                                                for (const tool of msg.tool_calls) {
+                                                    thinkContentText += ` ${tool.name}`;
+                                                }
+                                                thinkContentText += '\n';
+                                                thinkContent.textContent = thinkContentText;
+                                                chatMessages.scrollTop = chatMessages.scrollHeight;
+                                            } else if (msg.type === 'tool' && msg.content) {
+                                                if (currentType.includes('reserve_graph')) {
+                                                    const reserveResultMessage = document.createElement('div');
+                                                    reserveResultMessage.className = 'message ai-message';
+                                                    reserveResultMessage.innerHTML = marked.parse(String(msg.content));
+                                                    chatMessages.appendChild(reserveResultMessage);
+                                                } else {
+                                                    if (thinkElement.style.display === 'none') {
+                                                        thinkElement.style.display = 'block';
+                                                    }
+                                                    ensureThinkElementAttached();
+                                                    thinkContentText += '宸ュ叿璋冪敤瀹屾垚锛岀粨鏋滃涓嬶細\n';
+                                                    thinkContentText += msg.content + '\n';
+                                                    thinkContent.textContent = thinkContentText;
+                                                }
+                                                chatMessages.scrollTop = chatMessages.scrollHeight;
+                                            }
+                                        }
+                                    } else {
+                                        const interruptPayload = findInterruptPayload(data);
+                                        if (!interruptPayload || interruptId === interruptPayload.id) {
+                                            continue;
+                                        }
+
+                                        const interruptText = getInterruptText(interruptPayload);
+                                        const existingInterrupt = chatMessages.querySelector('#__interrupt__');
+                                        if (existingInterrupt) {
+                                            existingInterrupt.removeAttribute('id');
+                                        }
+
+                                        interruptMessageElement = document.createElement('div');
+                                        interruptMessageElement.className = 'message ai-message';
+                                        interruptMessageElement.id = '__interrupt__'
+                                        // 浣跨敤 marked 瑙ｆ瀽 Markdown
+                                        interruptMessageElement.innerHTML = marked.parse(interruptText);
+                                        chatMessages.appendChild(interruptMessageElement);
+                                        // 鍘婚噸锛屼細瀛樺湪涓や釜浜嬩欢锛屽涓嬶細
+                                        // event: updates|reserve_graph:b9ec69e0-ce52-e030-c3d3-ccdba7555727
+                                        // data: {"__interrupt__":[{"value":"璇疯緭鍏ヨ棰勫畾鐨勬埧婧愬悕绉?,"id":"a47e895827b56895a8fabbed0f7ffebe"}]}
+                                        // 
+                                        // event: updates
+                                        // data: {"__interrupt__":[{"value":"璇疯緭鍏ヨ棰勫畾鐨勬埧婧愬悕绉?,"id":"a47e895827b56895a8fabbed0f7ffebe"}]}
+                                        interruptId = interruptPayload.id;
+                                        // 婊氬姩鍒板簳閮?                                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                                    }
+                                }
+                                // 澶勭悊 messages/metadata 浜嬩欢锛宎i娑堟伅鍙戦€佸墠鐨勫噯澶?
+                                else if (currentType === 'messages/metadata\r') {
+                                    // 鎻愬彇鎵€鏈夋秷鎭?
+                                    const metadata = Object.values(data).map(v => v.metadata);
+                                    if (metadata[0] && (
+                                            metadata[0].langgraph_node === 'generate_query'
+                                            || metadata[0].langgraph_node === 'call_order'
+                                            || metadata[0].langgraph_node === 'finalize_reserve_result'
+                                            || metadata[0].langgraph_node === 'extend_node'
+                                            || metadata[0].langgraph_node === 'get_user_preferences'
+                                        )) {
+                                        startAI = true;
+                                        // 鍒涘缓AI娑堟伅鍏冪礌
+                                        if (!aiMessageElement || aiMessageElement.innerHTML.trim() !== '') {
+                                            aiMessageElement = document.createElement('div');
+                                            aiMessageElement.className = 'message ai-message';
+                                            chatMessages.appendChild(aiMessageElement);
+                                            ensureThinkElementAttached();
+                                        }
+                                    } else {
+                                        startAI = false;
+                                    }
+                                }
+                                // 澶勭悊 messages/partial 浜嬩欢
+                                else if (currentType === 'messages/partial\r') {
+                                    const messageData = data[0];
+                                    if (messageData.content && (messageData.type === 'ai') && startAI) {
+                                        // 鏇存柊AI娑堟伅鍐呭
+                                        aiMessageContent = messageData.content;
+                                        // 浣跨敤 marked 瑙ｆ瀽 Markdown
+                                        aiMessageElement.innerHTML = marked.parse(aiMessageContent);
+                                        // 婊氬姩鍒板簳閮?
+                                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                                    }
+                                }
+                            } catch (e) {
+                                console.error('瑙ｆ瀽JSON澶辫触:', e, line);
+                            }
+                        }
+                    }
+                }
+
+            } catch (error) {
+                console.error('鍙戦€佹秷鎭け璐?', error);
+
+                // 鏄剧ず閿欒娑堟伅
+                const errorMessage = document.createElement('div');
+                errorMessage.className = 'message ai-message';
+                errorMessage.textContent = '鎶辨瓑锛屽鐞嗘偍鐨勮姹傛椂鍑虹幇浜嗛敊璇€傝绋嶅悗鍐嶈瘯銆?;
+                chatMessages.appendChild(errorMessage);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+        }
+
+        // 椤甸潰鍔犺浇瀹屾垚鍚庯紝棰勫垱寤轰細璇?
+        */
+
+        function createAssistantTurn() {
+            const turnElement = document.createElement('div');
+            turnElement.className = 'assistant-turn';
+
+            const thinkElement = document.createElement('div');
+            thinkElement.className = 'process-message';
+            thinkElement.style.display = 'none';
+
+            const thinkHeader = document.createElement('div');
+            thinkHeader.className = 'think-header';
+
+            const thinkTitle = document.createElement('div');
+            thinkTitle.className = 'think-title';
+            thinkTitle.textContent = '思考过程';
+
+            const thinkToggle = document.createElement('button');
+            thinkToggle.className = 'think-toggle';
+            thinkToggle.innerHTML = '<i class="fas fa-chevron-down"></i>';
+            thinkToggle.setAttribute('title', '鐐瑰嚮灞曞紑/鏀剁缉');
+
+            thinkHeader.appendChild(thinkTitle);
+            thinkHeader.appendChild(thinkToggle);
+
+            const thinkContent = document.createElement('div');
+            thinkContent.className = 'think-content';
+
+            thinkElement.appendChild(thinkHeader);
+            thinkElement.appendChild(thinkContent);
+
+            thinkHeader.addEventListener('click', function() {
+                thinkContent.classList.toggle('collapsed');
+                const icon = thinkToggle.querySelector('i');
+                if (thinkContent.classList.contains('collapsed')) {
+                    icon.className = 'fas fa-chevron-right';
+                } else {
+                    icon.className = 'fas fa-chevron-down';
+                }
+            });
+
+            const answerElement = document.createElement('div');
+            answerElement.className = 'message ai-message';
+
+            turnElement.appendChild(thinkElement);
+            turnElement.appendChild(answerElement);
+            chatMessages.appendChild(turnElement);
+            return { turnElement, thinkElement, thinkContent, answerElement };
+        }
+
+        function findInterruptPayload(payload) {
+            if (!payload || typeof payload !== 'object') {
+                return null;
+            }
+            if (Array.isArray(payload.__interrupt__) && payload.__interrupt__.length > 0) {
+                return payload.__interrupt__[0];
+            }
+            for (const value of Object.values(payload)) {
+                if (!value || typeof value !== 'object') {
+                    continue;
+                }
+                if (Array.isArray(value.__interrupt__) && value.__interrupt__.length > 0) {
+                    return value.__interrupt__[0];
+                }
+            }
+            return null;
+        }
+
+        function getInterruptText(interruptPayload) {
+            if (!interruptPayload) {
+                return '';
+            }
+            const value = interruptPayload.value;
+            if (typeof value === 'string') {
+                return value;
+            }
+            if (value && typeof value === 'object') {
+                if (typeof value.question === 'string') {
+                    return value.question;
+                }
+                if (typeof value.prompt === 'string') {
+                    return value.prompt;
+                }
+                if (typeof value.message === 'string') {
+                    return value.message;
+                }
+                if (typeof value.text === 'string') {
+                    return value.text;
+                }
+                try {
+                    return JSON.stringify(value, null, 2);
+                } catch (error) {
+                    return String(value);
+                }
+            }
+            return String(value || '');
+        }
+
+        async function sendMessage() {
+            const message = chatInput.value.trim();
+            if (!message || isSendingMessage) return;
+
+            if (!currentThreadId) {
+                await createThread();
+            }
+            if (!currentThreadId) return;
+
+            isSendingMessage = true;
+            sendBtn.disabled = true;
+            chatInput.disabled = true;
+
+            chatInput.value = '';
+
+            const userMessageElement = document.createElement('div');
+            userMessageElement.className = 'message user-message';
+            userMessageElement.textContent = message;
+            chatMessages.appendChild(userMessageElement);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            persistCurrentConversation(message);
+
+            try {
+                const pendingInterruptElement = chatMessages.querySelector('#__interrupt__');
+                const isInterrupt = Boolean(pendingInterruptElement);
+                let requestBody;
+                if (isInterrupt) {
+                    pendingInterruptElement.removeAttribute('id');
+                    activeInterruptId = '';
+                    requestBody = {
+                        assistant_id: "house_agent",
+                        command: {
+                            resume: message
+                        },
+                        context: {
+                            user_id: getCurrentUserId()
+                        },
+                        stream_mode: ["updates", "messages"],
+                        stream_subgraphs: true
+                    };
+                } else {
+                    requestBody = {
+                        assistant_id: "house_agent",
+                        input: {
+                            messages: [{"role": "human", "content": message}]
+                        },
+                        context: {
+                            user_id: getCurrentUserId()
+                        },
+                        stream_mode: ["updates", "messages"],
+                        stream_subgraphs: true
+                    };
+                }
+
+                const response = await fetch(`${API_BASE_URL}/threads/${currentThreadId}/runs/stream`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const turn = createAssistantTurn();
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let thinkContentText = '';
+                let aiMessageContent = '';
+                let startAI = false;
+                let currentAnswerElement = turn.answerElement;
+                let streamAnswerElement = null;
+
+                function createNewAnswerElement() {
+                    const element = document.createElement('div');
+                    element.className = 'message ai-message';
+                    turn.turnElement.appendChild(element);
+                    currentAnswerElement = element;
+                    return element;
+                }
+
+                function ensureStreamingAnswerElement() {
+                    if (streamAnswerElement) {
+                        return streamAnswerElement;
+                    }
+                    if (
+                        currentAnswerElement
+                        && !currentAnswerElement.dataset.mode
+                        && currentAnswerElement.textContent.trim() === ''
+                    ) {
+                        streamAnswerElement = currentAnswerElement;
+                    } else {
+                        streamAnswerElement = createNewAnswerElement();
+                    }
+                    streamAnswerElement.dataset.mode = 'stream';
+                    streamAnswerElement.removeAttribute('id');
+                    currentAnswerElement = streamAnswerElement;
+                    return streamAnswerElement;
+                }
+
+                function appendAnswerBlock(markdownText, options = {}) {
+                    const { interruptId = '' } = options;
+                    streamAnswerElement = null;
+                    let target = currentAnswerElement;
+                    if (!target || target.textContent.trim() !== '') {
+                        target = createNewAnswerElement();
+                    }
+                    target.dataset.mode = 'final';
+                    target.innerHTML = marked.parse(markdownText);
+                    if (interruptId) {
+                        target.id = '__interrupt__';
+                        activeInterruptId = interruptId;
+                    } else {
+                        target.removeAttribute('id');
+                    }
+                    currentAnswerElement = target;
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+
+                    const chunk = decoder.decode(value);
+                    const lines = chunk.split('\n');
+                    let currentType = '';
+
+                    for (const line of lines) {
+                        if (line.startsWith('event: ')) {
+                            currentType = line.substring(7);
+                        } else if (line.startsWith('data: ')) {
+                            const dataStr = line.substring(6);
+                            if (dataStr.trim() === '') continue;
+                            try {
+                                const data = JSON.parse(dataStr);
+
+                                if (currentType.startsWith('updates')) {
+                                    if (Object.values(data).some(v => v && typeof v === 'object' && 'messages' in v)) {
+                                        if (currentType === 'updates\r') {
+                                            continue;
+                                        }
+
+                                        const messages = Object.values(data).flatMap(v => v.messages || []);
+                                        for (const msg of messages) {
+                                            if (!msg) continue;
+
+                                            if (msg.type === 'ai' && msg.tool_calls && msg.tool_calls.length > 0) {
+                                                if (turn.thinkElement.style.display === 'none') {
+                                                    turn.thinkElement.style.display = 'block';
+                                                }
+                                                thinkContentText += '进行工具调用：';
+                                                for (const tool of msg.tool_calls) {
+                                                    thinkContentText += ` ${tool.name}`;
+                                                }
+                                                thinkContentText += '\n';
+                                                turn.thinkContent.textContent = thinkContentText;
+                                                chatMessages.scrollTop = chatMessages.scrollHeight;
+                                            } else if (msg.type === 'tool' && msg.content) {
+                                                if (currentType.includes('reserve_graph')) {
+                                                    aiMessageContent = String(msg.content);
+                                                    appendAnswerBlock(aiMessageContent);
+                                                } else {
+                                                    if (turn.thinkElement.style.display === 'none') {
+                                                        turn.thinkElement.style.display = 'block';
+                                                    }
+                                                    thinkContentText += '宸ュ叿璋冪敤瀹屾垚锛岀粨鏋滃涓嬶細\n';
+                                                    thinkContentText += msg.content + '\n';
+                                                    turn.thinkContent.textContent = thinkContentText;
+                                                }
+                                                chatMessages.scrollTop = chatMessages.scrollHeight;
+                                            }
+                                        }
+                                    } else {
+                                        const interruptPayload = findInterruptPayload(data);
+                                        if (!interruptPayload || activeInterruptId === interruptPayload.id) {
+                                            continue;
+                                        }
+
+                                        const interruptText = getInterruptText(interruptPayload);
+                                        appendAnswerBlock(interruptText, { interruptId: interruptPayload.id });
+                                    }
+                                } else if (currentType === 'messages/metadata\r') {
+                                    const metadata = Object.values(data).map(v => v.metadata);
+                                    if (metadata[0] && (
+                                            metadata[0].langgraph_node === 'generate_query'
+                                            || metadata[0].langgraph_node === 'call_order'
+                                            || metadata[0].langgraph_node === 'finalize_reserve_result'
+                                            || metadata[0].langgraph_node === 'extend_node'
+                                            || metadata[0].langgraph_node === 'get_user_preferences'
+                                        )) {
+                                        startAI = true;
+                                        streamAnswerElement = null;
+                                    } else {
+                                        startAI = false;
+                                    }
+                                } else if (currentType === 'messages/partial\r') {
+                                    const messageData = data[0];
+                                    if (messageData.content && (messageData.type === 'ai') && startAI) {
+                                        aiMessageContent = messageData.content;
+                                        const streamAnswerElement = ensureStreamingAnswerElement();
+                                        streamAnswerElement.innerHTML = marked.parse(aiMessageContent);
+                                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                                    }
+                                }
+                            } catch (e) {
+                                console.error('瑙ｆ瀽JSON澶辫触:', e, line);
+                            }
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('鍙戦€佹秷鎭け璐?', error);
+                const errorMessage = document.createElement('div');
+                errorMessage.className = 'message ai-message';
+                errorMessage.textContent = '抱歉，处理您的请求时出现了错误。请稍后再试。';
+                chatMessages.appendChild(errorMessage);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            } finally {
+                persistCurrentConversation();
+                isSendingMessage = false;
+                sendBtn.disabled = false;
+                chatInput.disabled = false;
+                chatInput.focus();
+            }
+        }
+
+        window.addEventListener('load', () => {
+            initializeConversationStore();
+            // 寤惰繜鍒涘缓浼氳瘽锛岄伩鍏嶉〉闈㈠姞杞芥椂绔嬪嵆鍙戣捣璇锋眰
+            setTimeout(() => {
+                if (!currentThreadId) {
+                    createThread();
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
+
