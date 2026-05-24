@@ -131,7 +131,7 @@ DEEPSEEK_API_KEY=your_deepseek_api_key
 
 DB_DIALECT=mysql+pymysql
 DB_HOST=your_mysql_host
-DB_PORT=3308
+DB_PORT=3300
 DB_NAME=house
 DB_USER=root
 DB_PASSWORD=your_mysql_password
