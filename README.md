@@ -17,8 +17,8 @@
 
 ## 技术栈
 
-- Python 3.11+
-- LangGraph / LangGraph CLI
+- Python 
+- LangGraph
 - LangChain
 - DeepSeek Chat Model
 - MySQL：房源业务数据
