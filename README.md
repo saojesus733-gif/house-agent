@@ -29,21 +29,24 @@
 
 ## 系统架构
 
-```text
-用户输入
-  |
-  v
-主图 src/agent/graph.py
-  |
-  +-- identify_question：识别用户意图
-  |
-  +-- recommend_graph：推荐房源
-  |
-  +-- reserve_graph：预约房源
-  |
-  +-- get_user_preferences：查询历史偏好和预约记录
-  |
-  +-- extend_graph：闲聊或扩展问答
+```mermaid
+flowchart LR
+    U["用户浏览器"] --> FE["静态前端<br/>static/house.html"]
+    FE --> API["LangGraph API<br/>:8001"]
+
+    API --> G["主图 graph.py<br/>意图识别 / 路由"]
+    G --> R["recommend_graph<br/>房源推荐"]
+    G --> O["reserve_graph<br/>预约流程"]
+    G --> E["extend_graph<br/>闲聊扩展"]
+    G --> P["get_user_preferences<br/>历史偏好查询"]
+
+    R --> MYSQL["MySQL<br/>房源业务库 bitehouse"]
+    O --> STORE["LangGraph Store<br/>预约记录 / 用户偏好"]
+    P --> STORE
+
+    API --> PG["PostgreSQL<br/>线程 / Store / 运行时状态"]
+    API --> REDIS["Redis<br/>运行时队列"]
+    G --> LLM["DeepSeek / LLM"]
 ```
 
 核心文件：
