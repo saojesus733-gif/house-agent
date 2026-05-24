@@ -40,7 +40,7 @@ flowchart LR
     G --> E["extend_graph<br/>闲聊扩展"]
     G --> P["get_user_preferences<br/>历史偏好查询"]
 
-    R --> MYSQL["MySQL<br/>房源业务库 bitehouse"]
+    R --> MYSQL["MySQL<br/>房源业务库 house"]
     O --> STORE["LangGraph Store<br/>预约记录 / 用户偏好"]
     P --> STORE
 
