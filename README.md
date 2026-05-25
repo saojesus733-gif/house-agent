@@ -6,8 +6,8 @@
 
 ## 在线演示
 
-- 前端页面：[http://8.130.189.100:5500/static/house.html](http://8.130.189.100:5500/static/house.html)
-- 后端文档：[http://8.130.189.100:8001/docs](http://8.130.189.100:8001/docs)
+- 页面展示：[http://8.130.189.100:5500/static/house.html](http://8.130.189.100:5500/static/house.html)
+
 
 ## 功能亮点
 
