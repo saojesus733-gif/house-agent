@@ -8,7 +8,6 @@
 
 - 页面展示：[http://8.130.189.100:5500/static/house.html](http://8.130.189.100:5500/static/house.html)
 
-
 ## 功能亮点
 
 - 自然语言找房：用户可以直接输入城市、预算、户型、区域、通勤等需求。
@@ -221,7 +220,6 @@ bash deploy.sh
 
 ```text
 前端：http://8.130.189.100:5500/static/house.html
-后端：http://8.130.189.100:8001/docs
 ```
 
 更多说明见 [DEPLOY.md](DEPLOY.md)。
